@@ -6,6 +6,7 @@ $git init
 if ~/.ssh/id_rsa.pub not exist
 use ssh-keygen -t rsa -C "email@example.com" to create
 then copy the content to the github settings
+<Use Git bash when your sys is win>
 $
 $git remote add origin <server>
 $
@@ -27,7 +28,8 @@ $git log --help
 $
 $git config color.ui true
 $git config formate.pretty oneline
-$git 
+$git config --global user.email "yourEmail" 
+$git config --global user.name "yourName"
 $git status
 $git add
 $git commit -m "<message>"
