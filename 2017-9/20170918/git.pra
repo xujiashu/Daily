@@ -1,0 +1,35 @@
+#learn how to use git
+$cd GITDIR
+$git init
+
+#add SSH key
+if ~/.ssh/id_rsa.pub not exist
+use ssh-keygen -t rsa -C "email@example.com" to create
+then copy the content to the github settings
+<Use Git bash when your sys is win>
+$
+$git remote add origin <server>
+$
+#get a .git from origin
+$git clone 
+$
+$git checkout <branch>
+$git checkout -b <branch> #create and goto
+$git branch -d <branch>   #delete a branch
+$git pull origin <branch> #update the .git from origin
+$git push origin <branch> #similar to pull
+$
+$git log
+$git log --author=<name>
+$git log --pretty=oneline  #output in oneline
+$git log --graph --oneline --decorate -all
+$git log -name-status    #check the files which is changed
+$git log --help
+$
+$git config color.ui true
+$git config formate.pretty oneline
+$git config --global user.email "yourEmail" 
+$git config --global user.name "yourName"
+$git status
+$git add
+$git commit -m "<message>"

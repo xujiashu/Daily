@@ -1,0 +1,19 @@
+#This is a doc about the python virtualenv
+#
+#create an virtual envdir
+$virtualenv <envName>
+#use -p option when you want different vision python
+$virtualenv -p <pythonPath> <envName>
+$
+#enable the envirment
+$cd <path>
+$source bin/activate
+$. bin/activate
+#Win
+$cd <path>
+$source Scripts/activate
+$. Scripts/activate
+$
+#disable the envirment
+$deactivate
+$
