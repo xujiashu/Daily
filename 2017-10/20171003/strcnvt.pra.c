@@ -1,5 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
+#include<string.h>
 
 int main()
 {
@@ -7,16 +8,17 @@ int main()
   char *end;
   long value;
   
-  puts("Enter a number (empty line to quit): ");
-  while(gets(number) && number[0])
+  fputs("Enter a number (empty line to quit): \n", stdout);
+  while(fgets(number, 30-1, stdin) && number[0] != '\n')
   {
+    number[strlen(number)-1] = '\0';
     value = strtol(number, &end, 10);
     printf("value: %ld, stopped at %s (%d)\n", value, end, *end);
     value = strtol(number, &end, 16);
     printf("value: %ld, stopped at %s (%d)\n", value, end, *end);
-    puts("Next number:");
+    fputs("Next number: \n", stdout);
   }
-  puts("Bye!\n");
+  fputs("Bye!\n", stdout);
 
   return 0;
 }

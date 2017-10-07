@@ -4,6 +4,8 @@
 #define LIM 20
 #define HALT " "
 
+void stsrt(char *string[], int num);
+
 int main()
 {
   char input[LIM][SIZE];
@@ -13,15 +15,17 @@ int main()
 
   printf("Input up to %d lines, and I will sort them.\n", LIM);
   printf("To stop, press the Enter key tat a line's start.\n");
-  while(ct<LIM && gets(input[ct])!=NULL && input[ct][0] != '\0')
+  while(ct<LIM && 
+  fgets(input[ct], SIZE-1, stdin)!=NULL && 
+  input[ct][0] != '\n')
   {
     ptstr[ct] = input[ct];
     ct++;
   }
   stsrt(ptstr, ct);
-  puts("\nHere's the sorted list: \n");
+  fputs("Here's the sorted list: \n", stdout);
   for(k=0; k<ct; k++)
-    puts(ptstr[k]);
+    fputs(ptstr[k], stdout);
 
   return 0;
 }
