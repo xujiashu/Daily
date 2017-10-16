@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1507887281 source:e:\study\daily\2017-10\20171012\testh\part.c
+	<stdio.h>
+	"mod.h"
+
+1507964008 source:e:\study\daily\2017-10\20171012\testh\main.c
+	<stdlib.h>
+	"mod.h"
+
+1507963826 e:\study\daily\2017-10\20171012\testh\mod.h
+	<stdio.h>
+
+1507963826 source:e:\study\daily\2017-10\20171012\testh\varargs.c
+	<stdio.h>
+	<stdarg.h>
+
