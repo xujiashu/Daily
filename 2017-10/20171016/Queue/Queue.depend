@@ -1,0 +1,15 @@
+# depslib dependency file v1.0
+1508247532 source:e:\study\daily\2017-10\20171016\queue\main.c
+	<stdio.h>
+	<stdlib.h>
+	"qhea.h"
+
+1508243555 e:\study\daily\2017-10\20171016\queue\qhea.h
+	<stdbool.h>
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1508247515 source:e:\study\daily\2017-10\20171016\queue\qfunc.c
+	"qhea.h"
+

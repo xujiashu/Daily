@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1508159496 source:e:\study\daily\2017-10\20171016\llist\func.c
+	"Lhea.h"
+
+1508159080 source:e:\study\daily\2017-10\20171016\llist\main.c
+	<stdio.h>
+	<stdlib.h>
+	"Lhea.h"
+
+1508157826 e:\study\daily\2017-10\20171016\llist\lhea.h
+	<stdbool.h>
+	<stdio.h>
+	<stdlib.h>
+
