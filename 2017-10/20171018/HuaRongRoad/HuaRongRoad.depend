@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1508339671 source:e:\study\daily\2017-10\20171018\huarongroad\main.c
+	<stdio.h>
+	<stdlib.h>
+	"huarongd.h"
+
+1508338019 e:\study\daily\2017-10\20171018\huarongroad\theh.h
+	<string.h>
+	<stdbool.h>
+	<stdio.h>
+
+1508338547 source:e:\study\daily\2017-10\20171018\huarongroad\move.c
+	"theh.h"
+
+1508340116 e:\study\daily\2017-10\20171018\huarongroad\huarongd.h
+	<string.h>
+	<stdbool.h>
+	<stdio.h>
+
+1508339628 source:e:\study\daily\2017-10\20171018\huarongroad\func.c
+	"huarongd.h"
+	<stdio.h>
+	<string.h>
+
