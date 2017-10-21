@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1508247532 source:e:\study\daily\2017-10\20171016\queue\main.c
+1508247736 source:e:\study\daily\2017-10\20171016\queue\main.c
 	<stdio.h>
 	<stdlib.h>
 	"qhea.h"

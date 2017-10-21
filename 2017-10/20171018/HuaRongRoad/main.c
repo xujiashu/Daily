@@ -2,49 +2,111 @@
 #include <stdlib.h>
 #include"huarongd.h"
 //#define TESTBIN
+//#define TESTFUNC
 
-//the PointB index is (Index-3)
-int PointA[3][4] = {
-  {A00, A01, A02, A03},
-  {A10, A11, A12, A13},
-  {A20, A21, A22, A23}
+//the PointB index is (Index-2)
+int PointA[2][5] = {
+  {P00, P01, P02, P03, P04},
+  {P10, P11, P12, P13, P14}
 };
 
-int PointB[2][4] = {
-  {B30, B31, B32, B33},
-  {B40, B41, B42, B43}
+int PointB[2][5] = {
+  {P00, P01, P02, P03, P04},
+  {P10, P11, P12, P13, P14}
 };
+
+char allDirec[4] = {'u', 'd', 'l', 'r'};
+
+
+
+
+//static int HRR[4][5];
 
 #ifdef TESTBIN
 static void DispBinary(int);
 #endif
-static int HRR[5][4];
 
 int main()
 {
+#ifdef TESTFUNC
+  static int HRR[4][5] = {
+    {5,5,1,1,0},
+    {4,4,1,2,3},
+    {2,3,5,6,6},
+    {0,1,4,6,6}
+    };
+  mapCode testCode= {0,0,{3,0},{0,4}};
+  graphToCode(&testCode, HRR);
+  printf("%d, %d \n", testCode.codea, testCode.codeb);
+  codeToGraph(&testCode, HRR);
+  int i,j;
+  for(i=0; i<4; i++)
+  {
+    for(j=0; j<5; j++)
+    {
+      printf("%d ", HRR[i][j]);
+    }
+    putchar('\n');
+  }
+
+
+#endif // TESTFUNC
+
 #ifdef TESTBIN
   DispBinary(Boss);
   DispBinary(Bing);
-  DispBinary(HZ);
+  DispBinary(ZFH);
+  DispBinary(ZFT);
+  DispBinary(GYH);
+  DispBinary(GYT);
   DispBinary(Empty);
   printf("%d Hello world!\n", sizeof(int));
   int i,j;
-  for(i=0; i<5; i++)
+  for(i=0; i<4; i++)
   {
-    if(i<3)
+    if(i<2)
     {
-      for(j=0; j<4; j++)
+      for(j=0; j<5; j++)
         DispBinary(PointA[i][j]);
     }
     else
     {
-      for(j=0; j<4; j++)
-        DispBinary(PointB[i-3][j]);
+      for(j=0; j<5; j++)
+        DispBinary(PointB[i-2][j]);
     }
   }
 #endif
 
-  memset(HRR, 0, 20 * sizeof(int));
+//main()
+  struct hrroad Hrrd;
+  Road fleeWay = &Hrrd;
+  InitList(fleeWay);
+  int startGraph[4][5];
+  int i, j;
+  puts("First Graph: ");
+  for(i=0; i<4; i++)
+    for(j=0; j<5; j++)
+      scanf("%d", &startGraph[i][j]);
+  while(getchar() != '\n')
+    continue;
+  mapCode firstCode;
+  graphToCode(&firstCode, startGraph);
+  NextStep(firstCode, fleeWay);
+
+  while(true)
+  {
+    if(goForward(fleeWay))
+    {
+      if(isFlee())
+        break;
+      else
+        continue;
+    }
+    else
+      Retreat(fleeWay);
+  }
+  disp(fleeWay);
+  puts("Bye!");
 
 
   return 0;

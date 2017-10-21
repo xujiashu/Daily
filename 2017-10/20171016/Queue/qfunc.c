@@ -61,7 +61,10 @@ bool AddItem(Item item, Queue plist)
   pnew->next = NULL;
 
   if(IsEmpty(plist))
+  {
     plist->head = pnew;
+    plist->rear = pnew;
+  }
   else
     plist->rear->next = pnew;
   plist->rear = pnew;

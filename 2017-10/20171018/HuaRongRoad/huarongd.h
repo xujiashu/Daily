@@ -1,44 +1,84 @@
 #include<string.h>
 #include<stdbool.h>
 #include<stdio.h>
+#include<stdlib.h>
 
-#define A00 0x00000003
-#define A01 0x0000000C
-#define A02 0x00000030
-#define A03 0x000000C0
-#define A10 0x00000300
-#define A11 0x00000C00
-#define A12 0x00003000
-#define A13 0x0000C000
-#define A20 0x00030000
-#define A21 0x000C0000
-#define A22 0x00300000
-#define A23 0x00C00000
-
-#define B30 0x00000003
-#define B31 0x0000000C
-#define B32 0x00000030
-#define B33 0x000000C0
-#define B40 0x00000300
-#define B41 0x00000C00
-#define B42 0x00003000
-#define B43 0x0000C000
+#define P14 07
+#define P13 070
+#define P12 0700
+#define P11 07000
+#define P10 070000
+#define P04 0700000
+#define P03 07000000
+#define P02 070000000
+#define P01 0700000000
+#define P00 07000000000
 
 //#define PointA(Ia,Ja) A ## Ia ## Ja
 //#define PointB(Ib,Jb) B ## Ib ## Jb
 
-#define Empty 0x00000000  //0
-#define Bing  0x55555555  //1
-#define HZ    0xAAAAAAAA  //2
-#define Boss  0xFFFFFFFF  //3
+#define Empty 0x0  //0
+#define Bing  01111111111  //1
+#define ZFH   02222222222  //2 head vertical
+#define ZFT   03333333333  //3 tail
+#define GYH   04444444444  //4 head horizontal
+#define GYT   05555555555  //5 tail
+#define Boss  06666666666  //6
 
-struct position{
-  int i;
-  int j;
-};
+#define RISGOOD(x) ((x)>=0 && (x) <= 4)  //i
+#define CISGOOD(x) ((x)>=0 && (x) <=5)  //j
+#define ISNEIGHBOR(x,y) ((x)-(y)>0 ? (x)-(y) : (y)-(x))
+
+
+typedef struct position{
+  unsigned short i;
+  unsigned short j;
+}Posit;  //to record the empty position
 
 typedef struct map_code{
   int codea;
   int codeb;
+  Posit posA;  //indicate the position
+  Posit posB;  //indicate the position
 }mapCode;
+
+typedef struct tract{
+  Posit posA;
+  Posit posB;
+  char pick;
+  char direc;
+}Tract;
+
+typedef struct node{  //equal to each step
+  mapCode graphc;
+  Tract traList[8];   //record the road had been go to
+  struct node * next;
+  struct node * prenode;
+}Node;
+
+struct hrroad{
+  Node * head;
+  Node * rear;
+};
+
+typedef struct hrroad * Road;
+
+//func.c
+void codeToGraph(const mapCode * code, int (*HRR)[5]);
+void graphToCode(mapCode * code, int (*HRR)[5]);
+bool moveRole(Road road, char direc, int seed);
+bool goForward(Road road);
+bool isFlee(void);
+void disp(Road road);
+
+//listFunc.c
+void InitList(Road road);
+bool IsEmpty(const Road road);
+bool IsFull(const Road road);
+unsigned int StepCount(const Road road);
+bool NextStep(mapCode code, Road road);
+void Traverse(const Road road, void (* pfun)(mapCode code));
+void EmptyList(Road road);
+void Retreat(Road road);
+
 
