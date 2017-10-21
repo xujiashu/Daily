@@ -2,6 +2,8 @@
 #include<stdio.h>
 #include<string.h>
 
+#define BADNUM(x) ((x)==2 || (x)==3 || (x)==6 || (x)==0)
+
 static char seeds[8] = {'u', 'd', 'l', 'r', 'u', 'd', 'l', 'r'};
 
 static bool isLoop(Road road, mapCode code)
@@ -55,8 +57,10 @@ static void findWays(Tract * tractList)
 {
   int i;
   for(i=0; i<8; i++)
+  {
     tractModel.direc = seeds[i];
     tractList[i] = tractModel;
+  }
 }
 
 static bool boundaryCheck(int i,int j, char direc)
@@ -76,13 +80,13 @@ static bool boundaryCheck(int i,int j, char direc)
       return false;
     break;
   case 'l':
-    if(RISGOOD(j-1))
+    if(CISGOOD(j-1))
       ;
     else
       return false;
     break;
   case 'r':
-    if(RISGOOD(j+1))
+    if(CISGOOD(j+1))
       ;
     else
       return false;
@@ -189,7 +193,7 @@ bool moveRole(Road road, char direc, int seed)  //change the current graph
       {
 
       case 'u':
-        if(currGraph[sgi-1][sgj] == 3 || currGraph[sgi-1][sgj] == 2 || currGraph[sgi-1][sgj] == 6)
+        if(BADNUM(currGraph[sgi-1][sgj]))
         {
           road->rear->traList[seed].pick = 'A';
           return false;
@@ -207,7 +211,7 @@ bool moveRole(Road road, char direc, int seed)  //change the current graph
         }
         break;
       case 'd':
-        if(currGraph[sgi+1][sgj] == 3 || currGraph[sgi+1][sgj] == 2 || currGraph[sgi+1][sgj] == 6)
+        if(BADNUM(currGraph[sgi+1][sgj]))
         {
           road->rear->traList[seed].pick = 'A';
           return false;
@@ -226,7 +230,7 @@ bool moveRole(Road road, char direc, int seed)  //change the current graph
         break;
 
       case 'l':
-        if(currGraph[sgi][sgj-1] == 4 || currGraph[sgi][sgj-1] == 5 || currGraph[sgi][sgj-1] == 6)
+        if(BADNUM(currGraph[sgi][sgj-1]))
         {
           road->rear->traList[seed].pick = 'A';
           return false;
@@ -245,7 +249,7 @@ bool moveRole(Road road, char direc, int seed)  //change the current graph
         break;
 
       case 'r':
-        if(currGraph[sgi][sgj+1] == 4 || currGraph[sgi][sgj+1] == 5 || currGraph[sgi][sgj+1] == 6)
+        if(BADNUM(currGraph[sgi][sgj+1]))
         {
           road->rear->traList[seed].pick = 'A';
           return false;
@@ -304,8 +308,8 @@ bool moveRole(Road road, char direc, int seed)  //change the current graph
           {
             currGraph[p1i][mead1] = 6;
             currGraph[p2i][mead2] = 6;
-            currGraph[p1i-1][mead1] = 0;
-            currGraph[p2i-1][mead2] = 0;
+            currGraph[p1i-2][mead1] = 0;
+            currGraph[p2i-2][mead2] = 0;
           }
           else
           {
@@ -341,8 +345,8 @@ bool moveRole(Road road, char direc, int seed)  //change the current graph
           {
             currGraph[p1i][mead1] = 6;
             currGraph[p2i][mead2] = 6;
-            currGraph[p1i+1][mead1] = 0;
-            currGraph[p2i+1][mead2] = 0;
+            currGraph[p1i+2][mead1] = 0;
+            currGraph[p2i+2][mead2] = 0;
           }
           else
           {
@@ -377,9 +381,9 @@ bool moveRole(Road road, char direc, int seed)  //change the current graph
           else if(currGraph[mead1][p1j-1] == 6 && currGraph[mead2][p2j-1] == 6)
           {
             currGraph[mead1][p1j] = 6;
-            currGraph[mead1][p2j] = 6;
-            currGraph[mead1][p1j-1] = 0;
-            currGraph[mead1][p2j-1] = 0;
+            currGraph[mead2][p2j] = 6;
+            currGraph[mead1][p1j-2] = 0;
+            currGraph[mead2][p2j-2] = 0;
           }
           else
           {
@@ -414,9 +418,9 @@ bool moveRole(Road road, char direc, int seed)  //change the current graph
           else if(currGraph[mead1][p1j+1] == 6 && currGraph[mead2][p2j+1] == 6)
           {
             currGraph[mead1][p1j] = 6;
-            currGraph[mead1][p2j] = 6;
-            currGraph[mead1][p1j+1] = 0;
-            currGraph[mead1][p2j+1] = 0;
+            currGraph[mead2][p2j] = 6;
+            currGraph[mead1][p1j+2] = 0;
+            currGraph[mead2][p2j+2] = 0;
           }
           else
           {
@@ -464,7 +468,7 @@ bool goForward(Road road)  //first call function
   char pick;
   codeToGraph(&(pnode->graphc), currGraph);  //load graph  -cg1
   i = pnode->traList[0].posA.i;
-  if(i == -1)  //is new graph
+  if(i == 65535)  //is new graph
   {
     //init the traLizt
     getPosit();
@@ -509,6 +513,7 @@ void disp(Road road)
   Node * pnode = road->head;
   int hrrgraph[4][5];
   int i, j;
+  puts("----------");
   while(pnode != NULL)
   {
     codeToGraph(&(pnode->graphc), hrrgraph);

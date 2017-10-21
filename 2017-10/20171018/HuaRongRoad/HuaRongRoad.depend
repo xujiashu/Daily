@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1508566811 source:e:\study\daily\2017-10\20171018\huarongroad\main.c
+1508584873 source:e:\study\daily\2017-10\20171018\huarongroad\main.c
 	<stdio.h>
 	<stdlib.h>
 	"huarongd.h"
@@ -18,11 +18,11 @@
 	<stdio.h>
 	<stdlib.h>
 
-1508566811 source:e:\study\daily\2017-10\20171018\huarongroad\func.c
+1508583373 source:e:\study\daily\2017-10\20171018\huarongroad\func.c
 	"huarongd.h"
 	<stdio.h>
 	<string.h>
 
-1508566268 source:e:\study\daily\2017-10\20171018\huarongroad\listfunc.c
+1508585178 source:e:\study\daily\2017-10\20171018\huarongroad\listfunc.c
 	"huarongd.h"
 

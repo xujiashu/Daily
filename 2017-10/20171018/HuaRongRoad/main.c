@@ -78,6 +78,8 @@ int main()
 #endif
 
 //main()
+  int countn = 0;
+
   struct hrroad Hrrd;
   Road fleeWay = &Hrrd;
   InitList(fleeWay);
@@ -104,6 +106,13 @@ int main()
     }
     else
       Retreat(fleeWay);
+    if(countn%1000 == 0)
+    {
+      puts("I still running ...");
+      disp(fleeWay);
+    }
+
+    countn++;
   }
   disp(fleeWay);
   puts("Bye!");

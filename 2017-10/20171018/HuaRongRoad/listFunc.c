@@ -118,6 +118,8 @@ void Retreat(Road road)
 
   pnode = road->rear;
   road->rear = road->rear->prenode;
+  road->rear->next = NULL;
   free(pnode);
+  puts("Retreat.");
 
 }
