@@ -67,7 +67,7 @@ typedef struct hrroad * Road;
 void codeToGraph(const mapCode * code, int (*HRR)[5]);
 void graphToCode(mapCode * code, int (*HRR)[5]);
 bool moveRole(Road road, char direc, int seed);
-bool goForward(Road road);
+bool goForward(Road road, Road Deathdroad);
 bool isFlee(void);
 void disp(Road road);
 
@@ -79,6 +79,6 @@ unsigned int StepCount(const Road road);
 bool NextStep(mapCode code, Road road);
 void Traverse(const Road road, void (* pfun)(mapCode code));
 void EmptyList(Road road);
-void Retreat(Road road);
+void Retreat(Road road, Road Deathroad);
 
 

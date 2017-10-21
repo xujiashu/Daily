@@ -1,5 +1,4 @@
 #include"huarongd.h"
-
 static Tract initTract = {
     .posA = {-1, -1},
     .posB = {-1, -1},
@@ -78,10 +77,10 @@ bool NextStep(mapCode code, Road road)
   }
   else
   {
-   road->rear->next = pnew;
-   pnew->prenode = road->rear;
+    road->rear->next = pnew;
+    pnew->prenode = road->rear;
+    road->rear = pnew;
   }
-  road->rear = pnew;
 
   return true;
 }
@@ -107,9 +106,10 @@ void EmptyList(Road road)
   }
 }
 
-void Retreat(Road road)
+void Retreat(Road road, Road Deathdroad)
 {
   Node * pnode;
+  Node * PDnode;
   if(IsEmpty(road))
   {
     fprintf(stderr, "unknown error!!!\n");
@@ -119,7 +119,21 @@ void Retreat(Road road)
   pnode = road->rear;
   road->rear = road->rear->prenode;
   road->rear->next = NULL;
-  free(pnode);
-  puts("Retreat.");
+
+  //maybe there is another way to reach it
+  //so try to restore it.
+  PDnode = Deathdroad->head;
+  if(PDnode == NULL)
+  {
+    Deathdroad->head = pnode;
+    Deathdroad->rear = pnode;
+  }
+  else
+  {
+    Deathdroad->rear->next = pnode;
+    pnode->prenode = Deathdroad->rear;
+    Deathdroad->rear = pnode;
+    pnode->next = NULL;
+  }
 
 }

@@ -78,11 +78,13 @@ int main()
 #endif
 
 //main()
-  int countn = 0;
 
   struct hrroad Hrrd;
+  struct hrroad Deway;
+  Road Deathdway = &Deway;  //store the roads which may found the loop
   Road fleeWay = &Hrrd;
   InitList(fleeWay);
+  InitList(Deathdway);
   int startGraph[4][5];
   int i, j;
   puts("First Graph: ");
@@ -97,7 +99,7 @@ int main()
 
   while(true)
   {
-    if(goForward(fleeWay))
+    if(goForward(fleeWay, Deathdway))
     {
       if(isFlee())
         break;
@@ -105,18 +107,13 @@ int main()
         continue;
     }
     else
-      Retreat(fleeWay);
-    if(countn%1000 == 0)
-    {
-      puts("I still running ...");
-      disp(fleeWay);
-    }
-
-    countn++;
+      Retreat(fleeWay, Deathdway);
   }
   disp(fleeWay);
-  puts("Bye!");
+  printf("Total: %d\n", StepCount(fleeWay));
 
+  EmptyList(fleeWay);
+  puts("Bye!");
 
   return 0;
 }
