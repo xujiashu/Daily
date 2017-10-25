@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1508935773 source:c:\users\administrator\desktop\hrroadii\listfunc.c
+	"HRRoad.h"
+
+1508936011 c:\users\administrator\desktop\hrroadii\hrroad.h
+	<string.h>
+	<stdbool.h>
+	<stdio.h>
+	<stdlib.h>
+
+1508936034 source:c:\users\administrator\desktop\hrroadii\main.c
+	<stdio.h>
+	<stdlib.h>
+	"HRRoad.h"
+
+1508936011 source:c:\users\administrator\desktop\hrroadii\mainfunc.c
+	"HRRoad.h"
+	<stdio.h>
+	<string.h>
+

@@ -14,10 +14,8 @@
 #define P01 0700000000
 #define P00 07000000000
 
-//#define PointA(Ia,Ja) A ## Ia ## Ja
-//#define PointB(Ib,Jb) B ## Ib ## Jb
 
-#define Empty 0x0  //0
+#define Empty 0x0
 #define Bing  01111111111  //1
 #define ZFH   02222222222  //2 head vertical
 #define ZFT   03333333333  //3 tail
@@ -67,21 +65,15 @@ typedef struct hrroad * Road;
 //func.c
 void codeToGraph(const mapCode * code, int (*HRR)[5]);
 void graphToCode(mapCode * code, int (*HRR)[5]);
-bool moveRole(Node * pnode, char direc, int seed);
-bool goForward(Road road, Road Deathdroad);
+bool goForward(Road road, int maxsteps);
 bool isFlee(void);
-void disp(Road road);
-void writeFile(Road fleeWay, FILE * pf);
-void walkAgain(Road road);
 
 //listFunc.c
 void InitList(Road road);
 bool IsEmpty(const Road road);
 bool IsFull(const Road road);
-unsigned int StepCount(const Road road);
 bool NextStep(mapCode code, Road road);
-void Traverse(const Road road, void (* pfun)(mapCode code));
 void EmptyList(Road road);
-void Retreat(Road road, Road Deathroad);
-
+void Retreat(Road road);
+void DropTail(Node * head);
 

@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include"huarongd.h"
+
+//!!!!!!!
+//It's ok when run with debugger and breakpoint on retreat times....
+//why?
+
 //#define TESTBIN
 //#define TESTFUNC
 
@@ -79,6 +84,7 @@ int main()
 
 //main()
 
+  char fileName[200];
   struct hrroad Hrrd;
   struct hrroad Deway;
   Road Deathdway = &Deway;  //store the roads which may found the loop
@@ -87,6 +93,14 @@ int main()
   InitList(Deathdway);
   int startGraph[4][5];
   int i, j;
+  FILE * pf;
+
+
+
+  puts("name: ");
+  gets(fileName);
+  pf = fopen(fileName, "w+");
+
   puts("First Graph: ");
   for(i=0; i<4; i++)
     for(j=0; j<5; j++)
@@ -109,11 +123,16 @@ int main()
     else
       Retreat(fleeWay, Deathdway);
   }
-  disp(fleeWay);
+
+  puts("Success flee, sorting the way.");
+  walkAgain(fleeWay);
+  writeFile(fleeWay, pf);  //some game's graph should run by debugger and set breakpoint here, I don't know why.
   printf("Total: %d\n", StepCount(fleeWay));
 
-  EmptyList(fleeWay);
-  puts("Bye!");
+//EmptyList(fleeWay);
+//can not EmptyList(DeathdWay) I don't know why.
+  fclose(pf);
+  puts("Done.!");
 
   return 0;
 }

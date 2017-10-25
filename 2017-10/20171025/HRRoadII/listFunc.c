@@ -1,4 +1,5 @@
-#include"huarongd.h"
+#include"HRRoad.h"
+
 static Tract initTract = {  //it would not be changed
     .posA = {-1, -1},
     .posB = {-1, -1},
@@ -20,6 +21,8 @@ static void CopyToNode(mapCode code, Node * node)
   node->graphc = code;
 }
 
+
+//status function
 void InitList(Road road)
 {
   road->head = NULL;
@@ -29,7 +32,7 @@ void InitList(Road road)
 
 bool IsEmpty(const Road road)
 {
-  return road->head == NULL;
+  return road->total == 0;
 }
 
 bool IsFull(const Road road)
@@ -45,20 +48,9 @@ bool IsFull(const Road road)
   return full;
 }
 
-unsigned int StepCount(const Road road)
-{
-  unsigned int count = 0;
-  Node * pnode;
-  pnode = road->head;
-  while(pnode != NULL)
-  {
-    count++;
-    pnode = pnode->next;
-  }
-  return count;
-}
 
-bool NextStep(mapCode code, Road road)
+
+bool NextStep(mapCode code, Road road)   //add item
 {
   Node * pnew;
   Node * pnode = road->head;
@@ -66,10 +58,10 @@ bool NextStep(mapCode code, Road road)
   pnew = (Node *)malloc(sizeof(Node));
   if(pnew == NULL)
     return false;
-  preDeal(pnew);
+  preDeal(pnew);   //traList
 
-  CopyToNode(code, pnew);
-  pnew->next = NULL;
+  CopyToNode(code, pnew);  //mapcode
+  pnew->next = NULL;  //next node
 
   if(pnode == NULL)  //empty
   {
@@ -89,15 +81,6 @@ bool NextStep(mapCode code, Road road)
   return true;
 }
 
-void Traverse(const Road road, void (* pfun)(mapCode code))
-{
-  Node * pnode = road->head;
-  while(pnode != NULL)
-  {
-    (* pfun)(pnode->graphc);
-    pnode = pnode->next;
-  }
-}
 
 void EmptyList(Road road)
 {
@@ -110,10 +93,21 @@ void EmptyList(Road road)
   }
 }
 
-void Retreat(Road road, Road Deathdroad)
+void DropTail(Node * head)
 {
   Node * pnode;
-  Node * PDnode;
+  while(head != NULL)
+  {
+    pnode = head->next;
+    free(head);
+    head = pnode;
+  }
+}
+
+void Retreat(Road road)
+{
+  Node * pnode;
+
   if(IsEmpty(road))
   {
     fprintf(stderr, "unknown error!!!\n");  //I never see this error
@@ -122,22 +116,11 @@ void Retreat(Road road, Road Deathdroad)
 
   pnode = road->rear;
   road->rear = road->rear->prenode;
-  road->rear->next = NULL;
 
-  //maybe there is another way to reach it
-  //so try to restore it.
-  PDnode = Deathdroad->head;
-  if(PDnode == NULL)
-  {
-    pnode->prenode = NULL;
-    Deathdroad->head = pnode;
-    Deathdroad->rear = pnode;
-  }
-  else
-  {
-    Deathdroad->rear->next = pnode;
-    pnode->prenode = Deathdroad->rear;
-    Deathdroad->rear = pnode;
-  }
+  if(road->rear != NULL)
+    road->rear->next = NULL;
+
+  free(pnode);
+  (road->total)--;
 
 }

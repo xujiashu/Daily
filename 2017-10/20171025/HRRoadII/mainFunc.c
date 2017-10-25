@@ -1,4 +1,4 @@
-#include"huarongd.h"
+#include"HRRoad.h"
 #include<stdio.h>
 #include<string.h>
 
@@ -7,27 +7,6 @@
 
 static char seeds[8] = {'u', 'd', 'l', 'r', 'u', 'd', 'l', 'r'};
 
-static bool isLoop(Road road, Road Deathdroad, mapCode code)
-{
-  Node * pnode = road->head;
-  while(pnode != road->rear)
-  {
-    if(pnode->graphc.codea == code.codea &&
-       pnode->graphc.codeb == code.codeb)
-       return true;
-    pnode = pnode->next;
-  }
-  pnode = Deathdroad->head;
-  if(pnode != NULL)
-    while(pnode != NULL)
-    {
-      if(pnode->graphc.codea == code.codea &&
-         pnode->graphc.codeb == code.codeb)
-         return true;
-      pnode = pnode->next;
-    }
-  return false;
-}
 
 extern int PointA[2][5];
 extern int PointB[2][5];
@@ -108,58 +87,11 @@ static bool boundaryCheck(int i,int j, char direc)
 }
 
 
-void codeToGraph(const mapCode * code, int (*HRR)[5])
-{
-  int i, j;
-  int bit = 0;
-  for(i=0; i<4; i++)
-    if(i<2)
-      for(j=0; j<5; j++)
-      {
-        bit = 3*(9-5*i-j);
-        HRR[i][j] = (code->codea & PointA[i][j]) >> bit;
-      }
-    else
-      for(j=0; j<5; j++)
-      {
-        bit = 3*(9-5*(i-2)-j);
-        HRR[i][j] = (code->codeb & PointB[i-2][j]) >> bit;
-      }
-}
-
-void graphToCode(mapCode * code, int (*HRR)[5])
-{
-  int i, j;
-  int role;
-  int bit = 0;
-  for(i=0; i<4; i++)
-    if(i<2)
-      for(j=0; j<5; j++)
-      {
-        bit = 3*(9-5*i-j);
-        role = HRR[i][j];
-        role <<= bit;
-        code->codea = code->codea&(~PointA[i][j]);
-        code->codea += role;
-      }
-    else
-      for(j=0; j<5; j++)
-      {
-        bit = 3*(9-5*(i-2)-j);
-        role = HRR[i][j];
-        role <<= bit;
-        code->codeb = code->codeb&(~PointB[i-2][j]);
-        code->codeb += role;
-      }
-}
-
-
-
 //I don't want to see this code again.......
 //pick a way and then try to move.
 
 //check the choice reachable.
-bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
+static bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
 {
 
   codeToGraph(&(pnode->graphc), currGraph);
@@ -477,7 +409,53 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
 }
 
 
-bool goForward(Road road, Road Deathdroad)  //first call function
+void codeToGraph(const mapCode * code, int (*HRR)[5])
+{
+  int i, j;
+  int bit = 0;
+  for(i=0; i<4; i++)
+    if(i<2)
+      for(j=0; j<5; j++)
+      {
+        bit = 3*(9-5*i-j);
+        HRR[i][j] = (code->codea & PointA[i][j]) >> bit;
+      }
+    else
+      for(j=0; j<5; j++)
+      {
+        bit = 3*(9-5*(i-2)-j);
+        HRR[i][j] = (code->codeb & PointB[i-2][j]) >> bit;
+      }
+}
+
+void graphToCode(mapCode * code, int (*HRR)[5])
+{
+  int i, j;
+  int role;
+  int bit = 0;
+  for(i=0; i<4; i++)
+    if(i<2)
+      for(j=0; j<5; j++)
+      {
+        bit = 3*(9-5*i-j);
+        role = HRR[i][j];
+        role <<= bit;
+        code->codea = code->codea&(~PointA[i][j]);
+        code->codea += role;
+      }
+    else
+      for(j=0; j<5; j++)
+      {
+        bit = 3*(9-5*(i-2)-j);
+        role = HRR[i][j];
+        role <<= bit;
+        code->codeb = code->codeb&(~PointB[i-2][j]);
+        code->codeb += role;
+      }
+}
+
+
+bool goForward(Road road, int maxsteps)  //first call function
 {
   //the main data is mapCode and the traList.
   Node * pnode;
@@ -506,12 +484,10 @@ bool goForward(Road road, Road Deathdroad)  //first call function
   if(moveRole(road->rear, pnode->traList[i].direc, i))  //current graph had changed.  -cg2  pnode->traList changed too -tl2
   {
     graphToCode(&currCode, currGraph);  //encode
-    if(isLoop(road, Deathdroad, currCode) == false)  //success move and will not become a loop change the road->rear
-    {
+    if(road->total < maxsteps)
       NextStep(currCode, road);
-    }
     else
-      return true;  //quit this try
+      return false;
   }
   else if(i == 8)  //fail to move and there is no way
     return false;  //will retreat and change the road->rear = road->rear->prenode
@@ -529,108 +505,6 @@ bool isFlee(void)
 }
 
 
-void disp(Road road)
-{
-  Node * pnode = road->head;
-  int hrrgraph[4][5];
-  int i, j;
-  puts("----------");
-  while(pnode != NULL)
-  {
-    codeToGraph(&(pnode->graphc), hrrgraph);
-    for(i=0; i<4; i++)
-    {
-      for(j=0; j<5; j++)
-        printf("%d ",hrrgraph[i][j]);
-
-      putchar('\n');
-    }
-    printf("\n-----------\n");
-    pnode = pnode->next;
-  }
-}
-
-void walkAgain(Road road)  //did not free the useless node cause i am lazy to do so
-{
-  Node * pnode;
-  Node * nearest;
-  Node * media;
-  mapCode currCode;
-  mapCode mediaCode;
-  int i;
-  int len;
-  char pick;
-
-//start status
-  len = 0;
-  pnode = road->head;
-  nearest = pnode->next;
-  media = nearest;
-
-
-//fuck! stupid code!
-
-//try the remain steps and find a nearest way
-  while(true)
-  {
-
-    for(i=0; i<8; i++) //A:0-3, B:4-7 : pick a Way get the seed
-    {
-      //ALL the traList will be 'Q' x 8
-      pick = pnode->traList[i].pick;  //the way did not go to
-      if(pick != 'Q')
-        break;
-    }
-
-    //pnode start with road->head and move to road->rear or next 200 node
-    if(moveRole(pnode, pnode->traList[i].direc, i))  //current graph had changed.  -cg2  traList changed too -tl2
-    {
-      graphToCode(&currCode, currGraph);  //encode
-      while(media != NULL)  //media start with pnode->prenode (nearest)
-      {
-        if(len > 5000)
-          break;
-        mediaCode = media->graphc;
-        if(currCode.codea==mediaCode.codea && currCode.codeb==mediaCode.codeb)  //can reach the node
-        {
-          nearest = media;  // find it
-          break;
-        }
-        media = media->next;  //look back
-        len ++;
-      }
-      len = 0;
-    }
-
-    if(i == 8)  //current node's all steps is moved
-    {
-      if(nearest != pnode->next)  //found
-      {
-        pnode->next = nearest;  //make nearest pnode's neighbor
-
-        pnode->next->prenode = pnode;
-        pnode = nearest;
-        nearest = pnode->next;
-        media = nearest;
-
-
-        if(pnode == road->rear)
-        {
-          break;
-        }
-      }
-      else  //not found
-      {
-        pnode = nearest;
-        nearest = pnode->next;
-        media = nearest;
-        if(pnode == road->rear)
-          break;
-      }
-    }
-  }
-
-}
 
 void writeFile(Road road, FILE * pf)
 {
