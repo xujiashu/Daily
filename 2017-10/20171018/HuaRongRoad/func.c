@@ -41,6 +41,9 @@ static Tract tractModel = {   //this will change: for read posit data
 
 static int currGraph[4][5];
 
+static void readPicks(const Tract * tracList, char *picks);
+static int findSeed(Tract * traList);
+
 static void getPosit(void)
 {
   bool flag = true;
@@ -159,7 +162,7 @@ void graphToCode(mapCode * code, int (*HRR)[5])
 //pick a way and then try to move.
 
 //check the choice reachable.
-bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
+bool moveRole(Node * pnode, char * pick, char direc, int seed)  //change the current graph
 {
 
   codeToGraph(&(pnode->graphc), currGraph);
@@ -189,7 +192,7 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
   }
 
   //x move one step each time and A move double
-  if(pnode->traList[seed].pick == 'x')
+  if(*pick == 'x')
   {
     if(boundaryCheck(sgi, sgj, direc))  //basically check
     {
@@ -204,7 +207,7 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
       case 'u':
         if(BADNUMUD(currGraph[sgi-1][sgj]))  //0 2 3 6
         {
-          pnode->traList[seed].pick = 'A';
+          *pick = 'A';
           return false;
         }
         else if(currGraph[sgi-1][sgj] == 5 && RISGOOD(sgi-2))//0 2 3 5 6
@@ -227,7 +230,7 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
       case 'd':
         if(BADNUMUD(currGraph[sgi+1][sgj]))  //0 2 3 6
         {
-          pnode->traList[seed].pick = 'A';
+          *pick = 'A';
           return false;
         }
         else if(currGraph[sgi+1][sgj] == 4 && RISGOOD(sgi+2))//0 2 3 4 6
@@ -251,7 +254,7 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
       case 'l':
         if(BADNUMLR(currGraph[sgi][sgj-1]))  //0 4 5 6
         {
-          pnode->traList[seed].pick = 'A';
+          *pick = 'A';
           return false;
         }
         else if(currGraph[sgi][sgj-1] == 2 && CISGOOD(sgj-2))//0 2 4 5 6
@@ -275,7 +278,7 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
       case 'r':
         if(BADNUMLR(currGraph[sgi][sgj+1]))  //0 4 5 6
         {
-          pnode->traList[seed].pick = 'A';
+          *pick = 'A';
           return false;
         }
         else if(currGraph[sgi][sgj+1] == 3 && CISGOOD(sgj+2))//0 3 4 5 6
@@ -296,11 +299,11 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
         }
         break;
       }
-      pnode->traList[seed].pick = 'A';
+      *pick = 'A';
     }
     else
     {
-      pnode->traList[seed].pick = 'A';
+      *pick = 'A';
       return false;
     }
 
@@ -340,13 +343,13 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
           }
           else  //never meet 0 and when meet 1 4 5 do nothing
           {
-            pnode->traList[seed].pick = 'Q';
+            *pick = 'Q';
             return false;
           }
         }
         else
         {
-          pnode->traList[seed].pick = 'Q';
+          *pick = 'Q';
           return false;
         }
         break;
@@ -374,13 +377,13 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
           }
           else  //0, 1 4 5, 3 2 6
           {
-            pnode->traList[seed].pick = 'Q';
+            *pick = 'Q';
             return false;
           }
         }
         else
         {
-          pnode->traList[seed].pick = 'Q';
+          *pick = 'Q';
           return false;
         }
         break;
@@ -408,13 +411,13 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
           }
           else //0, 1 2 3, 4 5 6
           {
-            pnode->traList[seed].pick = 'Q';
+            *pick = 'Q';
             return false;
           }
         }
         else
         {
-          pnode->traList[seed].pick = 'Q';
+          *pick = 'Q';
           return false;
         }
         break;
@@ -442,34 +445,34 @@ bool moveRole(Node * pnode, char direc, int seed)  //change the current graph
           }
           else //0, 1 2 3, 4 5 6
           {
-            pnode->traList[seed].pick = 'Q';
+            *pick = 'Q';
             return false;
           }
         }
         else
         {
-          pnode->traList[seed].pick = 'Q';
+          *pick = 'Q';
           return false;
         }
         break;
       }
 
       //after switch
-      pnode->traList[seed].pick = 'Q';
+      *pick = 'Q';
 
       }
 
     //the two point not be together.
     else
     {
-      pnode->traList[seed].pick = 'Q';
+      *pick = 'Q';
       return false;
     }
   }
 
   else  //meet a 'Q' .pick
   {
-    pnode->traList[seed].pick = 'Q';
+    *pick = 'Q';
     return false;
   }
 
@@ -503,7 +506,7 @@ bool goForward(Road road, Road Deathdroad)  //first call function
       break;
   }
 
-  if(moveRole(road->rear, pnode->traList[i].direc, i))  //current graph had changed.  -cg2  pnode->traList changed too -tl2
+  if(moveRole(road->rear, &(pnode->traList[i].pick), pnode->traList[i].direc, i))  //current graph had changed.  -cg2  pnode->traList changed too -tl2
   {
     graphToCode(&currCode, currGraph);  //encode
     if(isLoop(road, Deathdroad, currCode) == false)  //success move and will not become a loop change the road->rear
@@ -560,6 +563,8 @@ void walkAgain(Road road)  //did not free the useless node cause i am lazy to do
   int i;
   int len;
   char pick;
+  char picks[8];  //in order to keep the traList
+
 
 //start status
   len = 0;
@@ -569,6 +574,8 @@ void walkAgain(Road road)  //did not free the useless node cause i am lazy to do
 
 
 //fuck! stupid code!
+  readPicks(pnode->traList, picks);
+
 
 //try the remain steps and find a nearest way
   while(true)
@@ -577,13 +584,13 @@ void walkAgain(Road road)  //did not free the useless node cause i am lazy to do
     for(i=0; i<8; i++) //A:0-3, B:4-7 : pick a Way get the seed
     {
       //ALL the traList will be 'Q' x 8
-      pick = pnode->traList[i].pick;  //the way did not go to
+      pick = picks[i];  //the way did not go to
       if(pick != 'Q')
         break;
     }
 
     //pnode start with road->head and move to road->rear or next 200 node
-    if(moveRole(pnode, pnode->traList[i].direc, i))  //current graph had changed.  -cg2  traList changed too -tl2
+    if(moveRole(pnode, &(picks[i]), pnode->traList[i].direc, i))  //current graph had changed.  -cg2  traList changed too -tl2
     {
       graphToCode(&currCode, currGraph);  //encode
       while(media != NULL)  //media start with pnode->prenode (nearest)
@@ -606,6 +613,7 @@ void walkAgain(Road road)  //did not free the useless node cause i am lazy to do
     {
       if(nearest != pnode->next)  //found
       {
+//        EmptyMidList(pnode->next, nearest);
         pnode->next = nearest;  //make nearest pnode's neighbor
 
         pnode->next->prenode = pnode;
@@ -627,6 +635,7 @@ void walkAgain(Road road)  //did not free the useless node cause i am lazy to do
         if(pnode == road->rear)
           break;
       }
+      readPicks(pnode->traList, picks);
     }
   }
 
@@ -637,20 +646,49 @@ void writeFile(Road road, FILE * pf)
   Node * pnode = road->head;
   int hrrgraph[4][5];
   int i, j;
+  int seed;
+  seed = -1;
   fprintf(pf, "----------\n");
   while(pnode != NULL)
   {
-    codeToGraph(&(pnode->graphc), hrrgraph);
-    for(j=4; j>=0; j--)
-    {
-      for(i=0; i<4; i++)
-        fprintf(pf, "%d ",hrrgraph[i][j]);
 
-      fprintf(pf, "\n");
+    if(pnode->prenode!=NULL)
+      seed = findSeed(pnode->prenode->traList);
+
+    if(seed != -1 && pnode->prenode->traList[seed].pick != 'A')
+    {
+      codeToGraph(&(pnode->graphc), hrrgraph);
+      for(j=4; j>=0; j--)
+      {
+        for(i=0; i<4; i++)
+          fprintf(pf, "%d ",hrrgraph[i][j]);
+
+        fprintf(pf, "\n");
+      }
+      fprintf(pf, "\n-----------\n");
     }
-    fprintf(pf, "\n-----------\n");
+
     pnode = pnode->next;
   }
 }
 
+static void readPicks(const Tract * tracList, char *picks)
+{
+  int i;
+  for(i=0; i<8; i++)
+    picks[i] = tracList[i].pick;
+}
 
+static int findSeed(Tract * traList)
+{
+  int seed;
+  char pick;
+  for(seed=0; seed<8; seed++) //A:0-3, B:4-7 : pick a Way get the seed
+  {
+    //ALL the traList will be 'Q' x 8
+    pick = traList[seed].pick;  //the way did not go to
+    if(pick == 'x')
+      break;
+  }
+  return seed-1;
+}

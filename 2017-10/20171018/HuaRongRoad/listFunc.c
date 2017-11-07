@@ -104,11 +104,24 @@ void EmptyList(Road road)
   Node * pnode;
   while(road->head != NULL)
   {
-    pnode = (road->head)->next;
+    pnode = road->head->next;
     free(road->head);
     road->head = pnode;
   }
 }
+
+void EmptyMidList(Node * pn1, Node * pn2)
+{
+  Node * pnode;
+  while(pn1 != pn2)
+  {
+    pnode = pn1->next;
+    free(pn1);
+    pn1 = pnode;
+  }
+}
+
+
 
 void Retreat(Road road, Road Deathdroad)
 {
@@ -123,6 +136,8 @@ void Retreat(Road road, Road Deathdroad)
   pnode = road->rear;
   road->rear = road->rear->prenode;
   road->rear->next = NULL;
+
+  road->total--;
 
   //maybe there is another way to reach it
   //so try to restore it.
@@ -140,4 +155,5 @@ void Retreat(Road road, Road Deathdroad)
     Deathdroad->rear = pnode;
   }
 
+  Deathdroad->total++;
 }

@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1509091906 source:e:\study\daily\2017-10\20171027\treepra\main.c
+	<stdio.h>
+	<stdlib.h>
+	"tree.h"
+
+1509096102 e:\study\daily\2017-10\20171027\treepra\tree.h
+	<stdio.h>
+	<string.h>
+	<stdlib.h>
+	<stdbool.h>
+

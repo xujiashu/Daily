@@ -67,12 +67,13 @@ typedef struct hrroad * Road;
 //func.c
 void codeToGraph(const mapCode * code, int (*HRR)[5]);
 void graphToCode(mapCode * code, int (*HRR)[5]);
-bool moveRole(Node * pnode, char direc, int seed);
+bool moveRole(Node * pnode, char * pick, char direc, int seed);
 bool goForward(Road road, Road Deathdroad);
 bool isFlee(void);
 void disp(Road road);
 void writeFile(Road fleeWay, FILE * pf);
 void walkAgain(Road road);
+void EmptyMidList(Node * pn1, Node * pn2);
 
 //listFunc.c
 void InitList(Road road);

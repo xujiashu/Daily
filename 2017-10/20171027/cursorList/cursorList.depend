@@ -1,0 +1,14 @@
+# depslib dependency file v1.0
+1509769268 source:e:\study\daily\2017-10\20171027\cursorlist\curlist.c
+	"curList.h"
+	<string.h>
+
+1509771801 e:\study\daily\2017-10\20171027\cursorlist\curlist.h
+	<stdio.h>
+
+1509774489 source:e:\study\daily\2017-10\20171027\cursorlist\main.c
+	<stdio.h>
+	<stdlib.h>
+	"curList.h"
+	<string.h>
+
